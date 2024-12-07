@@ -33,17 +33,17 @@ app.post(BASE_URL+"process_deal/", async (req, res) => {
 
         const dealsService = new DealsService(bxLnk);
 
-        const deal = await dealsService.getDealFromBx(dealId);
         const productRows = (await dealsService.getDealProductrows(dealId)).map(productrow => {
             return {
                 "id": productrow["ID"],
                 "name": productrow["PRODUCT_NAME"],
                 "quantity": productrow["QUANTITY"],
+                "measure_name": productrow["MEASURE_NAME"],
             }
         });
-        let info = "ID - Название - Кол-во\n";
+        let info = "Название - Кол-во\n";
         productRows.forEach(item => {
-            info += `${item.id} - ${item.name} - ${item.quantity}\n`;
+            info += `${item.name} - ${item.quantity}${item.measure_name}\n`;
         })
 
         const updateResult = await dealsService.updateDealById(dealId, infoUFId, info);
